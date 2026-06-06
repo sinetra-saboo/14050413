@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>361° Store</title>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html,body{
+width:100%;
+height:100%;
+overflow:hidden;
+background:#000;
+font-family:Arial,sans-serif;
+}
+
+/* =========================
+   STORE IMAGE
+========================= */
+
+.store{
+position:relative;
+width:100vw;
+height:100vh;
+background:url("361.jpg") center center/cover no-repeat;
+}
+
+/* =========================
+   HOTSPOTS
+========================= */
+
+.zone{
+position:absolute;
+cursor:pointer;
+transition:.3s;
+}
+
+.zone:hover{
+background:rgba(255,255,255,.05);
+box-shadow:0 0 40px rgba(255,255,255,.15);
+}
+
+/* LEFT SHELVES */
+#leftZone{
+left:0;
+top:10%;
+width:28%;
+height:72%;
+}
+
+/* BACK SHELVES */
+#backZone{
+left:31%;
+top:20%;
+width:25%;
+height:48%;
+}
+
+/* RIGHT SHELVES */
+#rightZone{
+right:0;
+top:10%;
+width:28%;
+height:72%;
+}
+
+/* CENTER TABLES */
+#centerZone{
+left:28%;
+bottom:0;
+width:44%;
+height:32%;
+}
+
+/* =========================
+   VIEWER
+========================= */
+
+.viewer{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.92);
+backdrop-filter:blur(8px);
+
+display:none;
+justify-content:center;
+align-items:center;
+
+z-index:9999;
+}
+
+.viewer.active{
+display:flex;
+}
+
+.closeBtn{
+position:absolute;
+top:30px;
+right:30px;
+width:50px;
+height:50px;
+border:none;
+border-radius:50%;
+font-size:24px;
+cursor:pointer;
+}
+
+/* =========================
+   CAROUSEL
+========================= */
+
+.stage{
+position:relative;
+width:420px;
+height:560px;
+perspective:2000px;
+}
+
+.card{
+position:absolute;
+inset:0;
+
+border-radius:24px;
+overflow:hidden;
+background:#fff;
+
+transition:
+transform .65s cubic-bezier(.2,.8,.2,1),
+opacity .65s cubic-bezier(.2,.8,.2,1),
+filter .65s cubic-bezier(.2,.8,.2,1),
+box-shadow .65s cubic-bezier(.2,.8,.2,1);
+}
+
+.card img{
+width:100%;
+height:80%;
+object-fit:cover;
+}
+
+.card h2{
+padding:18px;
+text-align:center;
+}
+
+/* FRONT */
+
+.front{
+z-index:10;
+
+transform:
+translateX(0)
+translateY(0)
+translateZ(120px)
+scale(1);
+
+opacity:1;
+
+box-shadow:
+0 40px 80px rgba(0,0,0,.45);
+}
+
+/* BACK */
+
+.back{
+z-index:1;
+
+transform:
+translateX(22px)
+translateY(10px)
+translateZ(-120px)
+scale(.9);
+
+opacity:.65;
+
+filter:brightness(.8);
+
+box-shadow:
+0 15px 30px rgba(0,0,0,.2);
+}
+
+/* ARROWS */
+
+.arrow{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+
+width:60px;
+height:60px;
+
+border:none;
+border-radius:50%;
+
+font-size:28px;
+cursor:pointer;
+
+background:white;
+}
+
+.leftArrow{
+left:-90px;
+}
+
+.rightArrow{
+right:-90px;
+}
+
+@media(max-width:768px){
+
+.stage{
+width:300px;
+height:430px;
+}
+
+.leftArrow{
+left:-70px;
+}
+
+.rightArrow{
+right:-70px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="store">
+
+<div id="leftZone" class="zone"></div>
+<div id="backZone" class="zone"></div>
+<div id="rightZone" class="zone"></div>
+<div id="centerZone" class="zone"></div>
+
+</div>
+
+<div class="viewer" id="viewer">
+
+<button class="closeBtn" onclick="closeViewer()">✕</button>
+
+<div class="stage">
+
+<button class="arrow leftArrow" onclick="prevCard()">‹</button>
+
+<div id="frontCard" class="card front"></div>
+
+<div id="backCard" class="card back"></div>
+
+<button class="arrow rightArrow" onclick="nextCard()">›</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+   DATA
+========================= */
+
+const createProducts=(prefix)=>{
+
+const arr=[];
+
+for(let i=1;i<=16;i++){
+
+arr.push({
+title:`${prefix} Product ${i}`,
+image:`https://picsum.photos/600/800?random=${prefix+i}`
+});
+
+}
+
+return arr;
+
+};
+
+const shelves={
+
+left:createProducts("LEFT"),
+
+back:createProducts("BACK"),
+
+right:createProducts("RIGHT"),
+
+center:createProducts("CENTER")
+
+};
+
+let activeProducts=[];
+let currentIndex=0;
+
+/* =========================
+   OPEN ZONE
+========================= */
+
+function openZone(name){
+
+activeProducts=shelves[name];
+
+currentIndex=0;
+
+renderCards();
+
+document
+.getElementById("viewer")
+.classList.add("active");
+
+}
+
+document.getElementById("leftZone")
+.onclick=()=>openZone("left");
+
+document.getElementById("backZone")
+.onclick=()=>openZone("back");
+
+document.getElementById("rightZone")
+.onclick=()=>openZone("right");
+
+document.getElementById("centerZone")
+.onclick=()=>openZone("center");
+
+/* =========================
+   CLOSE
+========================= */
+
+function closeViewer(){
+
+document
+.getElementById("viewer")
+.classList.remove("active");
+
+}
+
+/* =========================
+   RENDER
+========================= */
+
+function renderCards(){
+
+const front=
+activeProducts[currentIndex];
+
+const back=
+activeProducts[
+(currentIndex+1)%activeProducts.length
+];
+
+document.getElementById("frontCard").innerHTML=
+`
+<img src="${front.image}">
+<h2>${front.title}</h2>
+`;
+
+document.getElementById("backCard").innerHTML=
+`
+<img src="${back.image}">
+<h2>${back.title}</h2>
+`;
+
+}
+
+/* =========================
+   NEXT
+========================= */
+
+function nextCard(){
+
+currentIndex=
+(currentIndex+1)
+%
+activeProducts.length;
+
+renderCards();
+
+}
+
+/* =========================
+   PREV
+========================= */
+
+function prevCard(){
+
+currentIndex=
+(currentIndex-1+activeProducts.length)
+%
+activeProducts.length;
+
+renderCards();
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SARA CITY Shops</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html,body{
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:'Cinzel',serif;
+background:#1c1408;
+}
+
+.city{
+position:relative;
+width:100vw;
+height:100vh;
+
+background-image:url("city.jpg");
+background-position:center center;
+background-repeat:no-repeat;
+background-size:cover;
+}
+
+/* clickable shops */
+
+.shop{
+position:absolute;
+cursor:pointer;
+transition:all .3s ease;
+border-radius:6px;
+}
+
+.shop:hover{
+background:rgba(201,168,76,.08);
+box-shadow:
+0 0 20px rgba(201,168,76,.35),
+0 0 60px rgba(201,168,76,.15);
+}
+
+/* overlay */
+
+.page-overlay{
+position:fixed;
+inset:0;
+background:#1c1408;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+
+opacity:0;
+pointer-events:none;
+
+transition:opacity .6s ease;
+}
+
+.page-overlay.visible{
+opacity:1;
+pointer-events:all;
+}
+
+.overlay-text{
+font-size:24px;
+letter-spacing:8px;
+color:#c9a84c;
+text-shadow:0 0 40px rgba(201,168,76,.4);
+opacity:0;
+transition:opacity .4s ease .3s;
+}
+
+.page-overlay.visible .overlay-text{
+opacity:1;
+}
+
+/* title */
+
+.city-title{
+position:absolute;
+top:25px;
+left:50%;
+transform:translateX(-50%);
+
+color:#f0d080;
+font-size:26px;
+letter-spacing:8px;
+
+text-shadow:0 0 30px rgba(201,168,76,.4);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page-overlay" id="overlay">
+<div class="overlay-text" id="overlayText">
+SARA CITY ✦
+</div>
+</div>
+
+<div class="city">
+
+<div class="city-title">
+SARA CITY
+</div>
+
+<!-- CHARM MASHHAD -->
+<div class="shop"
+style="left:1%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('CHARM MASHHAD','CharmMashhad.html')">
+</div>
+
+<!-- HIVAEE -->
+<div class="shop"
+style="left:12%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('HIVAEE SHOP','HivaeeShop.html')">
+</div>
+
+<!-- 361 -->
+<div class="shop"
+style="left:23%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('361°','361.html')">
+</div>
+
+<!-- SHIKPOOSH -->
+<div class="shop"
+style="left:34%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('SHIKPOOSH','Shikpoosh.html')">
+</div>
+
+<!-- YAGHEH7 -->
+<div class="shop"
+style="left:45%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('YAGHEH7','Yagheh7.html')">
+</div>
+
+<!-- PRIMA -->
+<div class="shop"
+style="left:56%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('PRIMA','Prima.html')">
+</div>
+
+<!-- BANIMODE -->
+<div class="shop"
+style="left:67%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('BANIMODE','Banimode.html')">
+</div>
+
+<!-- I MODE -->
+<div class="shop"
+style="left:78%;top:39%;width:10.5%;height:35%;"
+onclick="enterShop('I MODE','IMode.html')">
+</div>
+
+<!-- KAFSHINO -->
+<div class="shop"
+style="left:89%;top:39%;width:10%;height:35%;"
+onclick="enterShop('KAFSHINO','Kafshino.html')">
+</div>
+
+</div>
+
+<script>
+
+function enterShop(shopName,page){
+
+const overlay=document.getElementById("overlay");
+const text=document.getElementById("overlayText");
+
+text.innerHTML=shopName + " ✦";
+
+overlay.classList.add("visible");
+
+setTimeout(()=>{
+window.location.href=page;
+},2000);
+
+}
+
+</script>
+
+</body>
+</html>
